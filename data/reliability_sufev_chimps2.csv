@@ -1,0 +1,49 @@
+Name,ID,Condition,Trial,Reward,Location 1,Location 2,Size,Peek (fill this one out),Choice,Reward
+Namukhisa,7,test,1,B,1,2,location 1 big,hp,yes,big
+Namukhisa,7,test,2,C,3,4,location 1 big,hp,no,small
+Namukhisa,7,test,3,B,5,3,location 1 big,hp,no,nothing
+Namukhisa,7,test,4,C,4,5,location 1 big,hp,yes,big
+Namukhisa,7,test,5,C,2,1,location 1 big,hp,yes,big
+Namukhisa,7,test,6,B,5,4,location 1 big,hp,yes,big
+Namukhisa,7,test,7,B,2,1,location 1 big,hp,yes,big
+Namukhisa,7,test,8,C,5,3,location 1 big,hp,yes,big
+Namukhisa,7,test,9,C,1,2,location 1 big,hp,no,small
+Namukhisa,7,test,10,B,5,4,location 1 big,hp,yes,big
+Namukhisa,7,test,11,B,4,5,location 1 big,hp,no,small
+Namukhisa,7,test,12,C,3,4,location 1 big,hp,yes,big
+Namukhisa,7,control,1,B,1,2,small,hp,yes,small
+Namukhisa,7,control,2,C,3,4,big,hp,yes,big
+Namukhisa,7,control,3,B,5,3,big,hp,yes,big
+Namukhisa,7,control,4,C,4,5,small,hp,yes,small
+Namukhisa,7,control,5,C,2,1,small,lp,yes,small
+Namukhisa,7,control,6,B,5,4,big,hp,yes,big
+Namukhisa,7,control,7,B,2,1,big,lp,yes,big
+Namukhisa,7,control,8,C,5,3,small,hp,yes,small
+Namukhisa,7,control,9,C,1,2,big,lp,yes,big
+Namukhisa,7,control,10,B,5,4,small,hp,yes,small
+Namukhisa,7,control,11,B,4,5,big,hp,yes,big
+Namukhisa,7,control,12,C,3,4,small,lp,yes,small
+Rototo,5,test,1,B,4,5,location 1 big,hp,yes,big
+Rototo,5,test,2,C,3,2,location 1 big,lp,yes,big
+Rototo,5,test,3,B,4,3,location 1 big,hp,yes,big
+Rototo,5,test,4,C,2,4,location 1 big,hp,yes,big
+Rototo,5,test,5,B,1,3,location 1 big,hp,no,nothing
+Rototo,5,test,6,C,5,4,location 1 big,hp,no,small
+Rototo,5,test,7,C,2,1,location 1 big,hp,yes,big
+Rototo,5,test,8,B,1,3,location 1 big,hp,yes,big
+Rototo,5,test,9,C,4,2,location 1 big,hp,yes,big
+Rototo,5,test,10,B,5,4,location 1 big,hp,yes,big
+Rototo,5,test,11,B,4,3,location 1 big,hp,yes,big
+Rototo,5,test,12,C,3,5,location 1 big,hp,no,small
+Kidogo,1,control,1,B,4,5,big,lp,yes,big
+Kidogo,1,control,2,C,3,2,small,lp,yes,small
+Kidogo,1,control,3,B,4,3,small,lp,yes,small
+Kidogo,1,control,4,C,2,4,big,lp,no,nothing
+Kidogo,1,control,5,B,1,3,big,lp,yes,big
+Kidogo,1,control,6,C,5,4,small,lp,yes,small
+Kidogo,1,control,7,B,4,3,small,lp,yes,small
+Kidogo,1,control,8,C,2,4,big,lp,yes,big
+Kidogo,1,control,9,C,3,2,small,lp,yes,small
+Kidogo,1,control,10,B,1,3,big,lp,yes,big
+Kidogo,1,control,11,C,5,4,small,lp,yes,small
+Kidogo,1,control,12,B,4,5,big,lp,yes,big
