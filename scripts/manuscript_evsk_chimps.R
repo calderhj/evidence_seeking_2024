@@ -4,10 +4,10 @@
 # 
 # Description:
 #   This script analyzes peeking behavior in ambiguous vs unambiguous conditions
-#   using mixed-effects models, Wilcoxon tests, and visualizations.Chimpanzees.
+#   using mixed-effects models and visualizations.Chimpanzees.
 #
 # Author: Calder Hilde-Jones
-# Last Modified: Dec 9, 2025
+# Last Modified: Jan 15, 2025
 # 
 # Requirements:
 #   - R packages: tidyverse, lme4, lmerTest
@@ -26,7 +26,7 @@ library(lmerTest)
 options(scipen = 999)
 
 # Load Previous Workspace (Optional) -------------------------------------------
-load("model_plot_evsk_Dec9.RData")
+load("model_plot_evsk_Jan15.RData")
 
 
 # ==============================================================================
@@ -108,15 +108,9 @@ model_peek_null <- glmer(
 cat("\n=== Full Model Summary ===\n")
 summary(model_peek_full)
 
-cat("\n=== Model Comparisons ===\n")
-cat("\nFull vs Null:\n")
-anova(model_peek_full, model_peek_null, test = "Chisq")
-
 cat("\n=== Term Significance (Full Model) ===\n")
 drop1(model_peek_full, test = "Chisq")
 
-cat("\n=== Term Significance (Reduced Model) ===\n")
-drop1(model_peek_red, test = "Chisq")
 
 
 # ==============================================================================
@@ -442,7 +436,7 @@ drop1(model_choice_red, test = "Chisq")
 # SAVE WORKSPACE
 # ==============================================================================
 
-save.image("model_plot_evsk_Dec9.RData")
+save.image("model_plot_evsk_Jan15.RData")
 
 cat("\n=== Analysis Complete ===\n")
 cat("Workspace saved to: model_plot_evsk_Oct2_2025.RData\n")

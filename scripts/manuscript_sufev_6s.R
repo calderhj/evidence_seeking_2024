@@ -8,7 +8,7 @@
 #   and creates visualizations.
 #
 # Author: Calder Hilde-Jones
-# Last Modified: Dec 9, 2025
+# Last Modified: Jan 15, 2025
 # 
 # Requirements:
 #   - R packages: tidyverse, lme4, PairedData
@@ -23,7 +23,7 @@ library(tidyverse)
 library(lme4)
 
 # Load Previous Workspace (Optional) -------------------------------------------
-load("model_plot_sufev6_prelim_Dec9.RData")
+load("model_plot_sufev6_prelim_Jan15.RData")
 
 
 # ==============================================================================
@@ -143,12 +143,16 @@ suf_choice_test_red <- glmer(
 # PART 3: MODEL SUMMARIES AND COMPARISONS
 # ==============================================================================
 
+#Model Summaries
+cat("\n=== Full and Reduced Model Summaries ===\n")
+summary(suf_6_full)
+summary(suf_6_red)
+
 # Test Term Significance -------------------------------------------------------
+cat("\n=== Drop1 Reduced Model ===\n")
 drop1(suf_6_red, test = 'Chisq')
 
-# Compare Reduced vs Null Model ------------------------------------------------
-anova(suf_6_red, suf_6_null, test = "Chisq")
-
+#Choice Model Summaries
 cat("\n=== Choice Test Only ===\n")
 summary(suf_choice_test)
 
@@ -427,7 +431,7 @@ print(interaction_plot_suf_6)
 # SAVE WORKSPACE
 # ==============================================================================
 
-save.image("model_plot_sufev6_prelim_Dec9.RData")
+save.image("model_plot_sufev6_prelim_Jan15.RData")
 
 # ==============================================================================
 # END OF SCRIPT

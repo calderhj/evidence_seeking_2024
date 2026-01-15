@@ -7,7 +7,7 @@
 #   using mixed-effects logistic regression models and creates visualizations.Chimpanzees.
 #
 # Author: Calder Hilde-Jones
-# Last Modified: Dec 9, 2025
+# Last Modified: Jan 15, 2025
 # 
 # Requirements:
 #   - R packages: tidyverse, lme4
@@ -22,7 +22,7 @@ library(tidyverse)
 library(lme4)
 
 # Load Previous Workspace (Optional) -------------------------------------------
-load("model_plot_sufev_Dec9.RData")
+load("model_plot_sufev_Jan15.RData")
 
 
 # ==============================================================================
@@ -397,7 +397,7 @@ print(interaction_plot_suf_chimps)
 # SAVE WORKSPACE
 # ==============================================================================
 
-save.image("model_plot_sufev_Dec9.RData")
+save.image("model_plot_sufev_Jan15.RData")
 
 cat("\n=== Analysis Complete ===\n")
 cat("Workspace saved to: model_plot_sufev_Oct2_2025.RData\n")

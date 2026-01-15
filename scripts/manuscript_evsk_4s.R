@@ -8,7 +8,7 @@
 #   human participant data.
 #
 # Author: Calder Hilde-Jones
-# Last Modified: Dec 9, 2025
+# Last Modified: Jan 15, 2025
 # 
 # Requirements:
 #   - R packages: tidyverse, PairedData, lme4
@@ -23,7 +23,7 @@ library(tidyverse)
 library(lme4)
 
 # Load Previous Workspace (Optional) -------------------------------------------
-load("evsk_hum_Oct2_2025.RData")
+load("evsk_hum_Jan15.RData")
 
 
 # ==============================================================================
@@ -99,13 +99,6 @@ model_peek_null <- glmer(
   family = binomial(link = "logit")
 )
 
-# Model 4: Simplified Model (Simple Random Intercepts) ------------------------
-model_peek_simple <- glmer(
-  Peek ~ Condition + z.trial + (1 | ID),
-  data = xdata,
-  control = contr,
-  family = binomial(link = "logit")
-)
 
 
 # ==============================================================================
@@ -117,16 +110,6 @@ summary(model_peek_full)
 
 cat("\n=== Reduced Model Summary ===\n")
 summary(model_peek_red)
-
-cat("\n=== Simple Model Summary ===\n")
-summary(model_peek_simple)
-
-cat("\n=== Model Comparisons ===\n")
-cat("\nReduced vs Null:\n")
-anova(model_peek_red, model_peek_null, test = "Chisq")
-
-cat("\nSimple vs Null:\n")
-anova(model_peek_simple, model_peek_null, test = "Chisq")
 
 cat("\n=== Term Significance (Full Model) ===\n")
 drop1(model_peek_full, test = "Chisq")
@@ -562,7 +545,7 @@ interaction_plot_choice
 # SAVE WORKSPACE
 # ==============================================================================
 
-save.image("evsk_hum_Dec9.RData")
+save.image("evsk_hum_Jan15.RData")
 
 cat("Workspace saved to: evsk_hum_Oct2_2025.RData\n")
 

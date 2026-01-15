@@ -8,7 +8,7 @@
 #   and creates visualizations.
 #
 # Author: Calder Hilde-Jones
-# Last Modified: Dec 9, 2025
+# Last Modified: Jan 15, 2025
 # 
 # Requirements:
 #   - R packages: tidyverse, lme4
@@ -23,7 +23,7 @@ library(tidyverse)
 library(lme4)
 
 # Load Previous Workspace (Optional) -------------------------------------------
-load("model_plot_sufevkids_Dec9.RData")
+load("model_plot_sufevkids_Jan15.RData")
 
 
 # ==============================================================================
@@ -72,9 +72,6 @@ contr <- glmerControl(
   optCtrl = list(maxfun = 100000000)
 )
 
-contr = glmerControl(optimizer="Nelder_Mead", optCtrl=list(maxfun=10000000))
-contr <- glmerControl(optimizer = "nloptwrap", optCtrl = list(maxfun = 10000000))
-
 # Model 1: Full Model (Condition × Trial Interaction) -------------------------
 suf_4_full <- glmer(
   Peek ~ Condition * z.trial + (1 + z.trial + Condition.test | ID),
@@ -110,16 +107,9 @@ VarCorr(suf_4_red)
 # ==============================================================================
 # PART 3: MODEL SUMMARIES AND COMPARISONS
 # ==============================================================================
-
-cat("\n=== Model Comparisons ===\n")
-
-anova(suf_4_full, suf_4_null,  test = "Chisq")
-
-cat("\nReduced vs Null (Chi-square test):\n")
-anova(suf_4_red, suf_4_null,  test = "Chisq")
-
-cat("\nReduced vs Null (Likelihood Ratio Test):\n")
-anova(suf_4_red, suf_4_null, test = "Chisq")
+cat("\n=== Model Summaries ===\n")
+summary(suf_4_full)
+summary(suf_4_red)
 
 cat("\n=== Term Significance (Full Model) ===\n")
 drop1(suf_4_full, test = "Chisq")
@@ -350,25 +340,10 @@ print(interaction_plot_suf_4)
 
 
 # ==============================================================================
-# PART 8: DESCRIPTIVE STATISTICS
-# ==============================================================================
-
-# Overall Peeking Rate ---------------------------------------------------------
-mean(suf_4$Peek)
-
-# Peeking Rate by Condition ----------------------------------------------------
-tapply(suf_4$Peek, suf_4$Condition, mean)
-
-# Individual Variation in Peeking Rates ----------------------------------------
-person_means <- tapply(suf_4$Peek, suf_4$ID, mean)
-hist(person_means, main = "Distribution of Individual Peeking Rates")
-
-
-# ==============================================================================
 # SAVE WORKSPACE
 # ==============================================================================
 
-save.image("model_plot_sufevkids_Dec9.RData")
+save.image("model_plot_sufevkids_Jan15.RData")
 
 # ==============================================================================
 # END OF SCRIPT

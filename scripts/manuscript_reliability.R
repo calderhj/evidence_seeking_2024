@@ -7,7 +7,7 @@
 #   peeking and choice coding across all studies (chimpanzees and children).
 #
 # Author: Calder Hilde-Jones
-# Last Modified: Dec 9, 2025
+# Last Modified: Jan15, 2025
 # 
 # Requirements:
 #   - R package: irr
