@@ -313,7 +313,6 @@ violin_suf <- ggplot(
     legend.position = "none"
   )
 
-violin_suf
 print(violin_suf)
 
 
@@ -356,7 +355,7 @@ interaction_plot_suf_chimps <- ggplot() +
   geom_line(
     data = boot_full_suf$ci.predicted,
     aes(x = z.trial, y = fitted, group = Condition, color = Condition),
-    size = 1.3
+    linewidth = 1.3
   ) +
   
   # Styling
