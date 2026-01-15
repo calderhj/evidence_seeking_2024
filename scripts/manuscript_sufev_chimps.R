@@ -148,13 +148,6 @@ suf_choice_test_red <- glmer(
 cat("\n=== Reduced Model Summary ===\n")
 summary(suf_model_peek_red)
 
-cat("\n=== Model Comparisons ===\n")
-cat("\nReduced vs Null (Chi-square test):\n")
-anova(suf_model_peek_red, suf_model_peek_null,  test = "Chisq")
-
-cat("\nReduced vs Null (Likelihood Ratio Test):\n")
-anova(suf_model_peek_red, suf_model_peek_null, test = "Chisq")
-
 cat("\n=== Term Significance (Full Model) ===\n")
 drop1(suf_model_peek_full, test = "Chisq")
 
