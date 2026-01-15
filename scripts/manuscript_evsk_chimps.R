@@ -118,7 +118,7 @@ drop1(model_peek_full, test = "Chisq")
 # ==============================================================================
 
 # Source Bootstrap Function ----------------------------------------------------
-source("boot_glmm.r")
+source("scripts/boot_glmm.r")
 
 # Generate Bootstrap Predictions -----------------------------------------------
 boot_full <- boot.glmm.pred(

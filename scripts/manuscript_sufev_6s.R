@@ -214,7 +214,7 @@ print(paired_plot)
 # ==============================================================================
 
 # Source Bootstrap Function ----------------------------------------------------
-source("boot_glmm.r")
+source("scripts/boot_glmm.r")
 
 # Generate Bootstrap Predictions (Condition Only) ------------------------------
 boot_plot_suf <- boot.glmm.pred(

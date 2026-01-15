@@ -126,7 +126,7 @@ table(suf_4$Peek, suf_4$Condition)
 # ==============================================================================
 
 # Source Bootstrap Function ----------------------------------------------------
-source("boot_glmm.r")
+source("scripts/boot_glmm.r")
 
 # Generate Bootstrap Predictions (Condition × Trial) ---------------------------
 boot_full_suf_kids <- boot.glmm.pred(

@@ -30,7 +30,7 @@ load("model_plot_sufev_Jan15.RData")
 # ==============================================================================
 
 # Load Raw Data ----------------------------------------------------------------
-mydata_suf <- read.csv("sufev_chimp_data.csv")
+mydata_suf <- read.csv("data/sufev_chimp_data.csv")
 
 # Data Preprocessing -----------------------------------------------------------
 suf_data <- mydata_suf %>%
@@ -172,7 +172,7 @@ summary(suf_choice_test_red)
 # ==============================================================================
 
 # Source Bootstrap Function ----------------------------------------------------
-source("boot_glmm.r")
+source("scripts/boot_glmm.r")
 
 # Generate Bootstrap Predictions (Condition × Trial) ---------------------------
 boot_full_suf <- boot.glmm.pred(
