@@ -25,7 +25,7 @@ library(irr)
 
 
 # Load  Reliability Data ---------------------------------------------
-rel_evsk <- read.csv("reliability_evsk_chimps.csv")
+rel_evsk <- read.csv("data/reliability_evsk_chimps.csv")
 
 # Calculate Kappa for Peek Coding (Alternative Dataset) -----------------------
 evsk_chimp_peek_kappa <- kappa2(
@@ -47,8 +47,8 @@ evsk_chimp_choice_kappa
 # ==============================================================================
 
 # Load Reliability Data (Two Coders) -------------------------------------------
-rel_sufev_1 <- read.csv("reliability_sufev_chimps1.csv")
-rel_sufev_2 <- read.csv("reliability_sufev_chimps2.csv")
+rel_sufev_1 <- read.csv("data/reliability_sufev_chimps1.csv")
+rel_sufev_2 <- read.csv("data/reliability_sufev_chimps2.csv")
 
 # Prepare Data Frame for Analysis ----------------------------------------------
 sufev_reliability_peek <- data.frame(
@@ -60,7 +60,7 @@ sufev_reliability_peek <- data.frame(
 sufev_rel_peek <- kappa2(sufev_reliability_peek[, c("peek1", "peek2")], weight = "unweighted")
 
 # Load Reliability Data for Choice Coding --------------------------------------
-rel_suf <- read.csv("reliability_sufev_chimps_choicedata.csv")
+rel_suf <- read.csv("data/reliability_sufev_chimps_choicedata.csv")
 
 # Calculate Kappa for Choice Coding --------------------------------------------
 sufev_rel_choice <- kappa2(
@@ -75,7 +75,7 @@ sufev_rel_choice
 # ==============================================================================
 
 # Load Reliability Data --------------------------------------------------------
-rel_evsk_kids <- read.csv("reliability_evsk_4.csv")
+rel_evsk_kids <- read.csv("data/reliability_evsk_4.csv")
 
 # Calculate Kappa for Peek Coding ----------------------------------------------
 evsk_kid_kappa_peek <- kappa2(
@@ -97,7 +97,7 @@ evsk_kid_kappa_choice
 # ==============================================================================
 
 # Load Reliability Data --------------------------------------------------------
-rel_sufev_4 <- read.csv("reliability_evsk_4.csv")
+rel_sufev_4 <- read.csv("data/reliability_evsk_4.csv")
 
 # Calculate Kappa for Peek Coding ----------------------------------------------
 sufev_4_kappa_peek <- kappa2(
@@ -119,7 +119,7 @@ sufev_4_kappa_choice
 # ==============================================================================
 
 # Load Reliability Data --------------------------------------------------------
-rel_sufev_6 <- read.csv("reliability_evsk_6.csv")
+rel_sufev_6 <- read.csv("data/reliability_evsk_6.csv")
 
 # Calculate Kappa for Peek Coding ----------------------------------------------
 sufev_6_kappa_peek <- kappa2(

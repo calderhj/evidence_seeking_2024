@@ -31,7 +31,7 @@ load("model_plot_sufevkids_Jan15.RData")
 # ==============================================================================
 
 # Load Raw Data ----------------------------------------------------------------
-data_suf_4 <- read.csv("sufev_4_data.csv")
+data_suf_4 <- read.csv("data/sufev_4_data.csv")
 
 # Data Preprocessing -----------------------------------------------------------
 suf_4 <- data_suf_4 %>%
@@ -132,7 +132,7 @@ source("scripts/boot_glmm.r")
 boot_full_suf_kids <- boot.glmm.pred(
   model.res = suf_4_red,
   excl.warnings = TRUE,
-  nboots = 10,
+  nboots = 1000,
   para = FALSE,
   level = 0.95,
   use = c("Condition", "z.trial")

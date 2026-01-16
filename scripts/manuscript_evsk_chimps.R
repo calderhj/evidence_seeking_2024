@@ -34,7 +34,7 @@ load("model_plot_evsk_Jan15.RData")
 # ==============================================================================
 
 # Load Raw Data ----------------------------------------------------------------
-mydata <- read.csv("evsk_chimp_data.csv")
+mydata <- read.csv("data/evsk_chimp_data.csv")
 
 # Data Preprocessing -----------------------------------------------------------
 xdata <- mydata %>%
@@ -315,9 +315,6 @@ bias_summary <- xdata_bias %>%
   ungroup() %>%
   mutate(Bias = abs(average_side - .50))
 
-# Wilcoxon Test for Bias -------------------------------------------------------
-wilcox_bias <- wilcox.test(Bias ~ Condition, data = bias_summary, paired = TRUE, exact = FALSE)
-wilcox_bias
 
 # Linear Mixed Model for Bias --------------------------------------------------
 model_bias <- lmer(Bias ~ Condition.test + (1 | ID),
@@ -327,14 +324,11 @@ summary(model_bias)
 drop1(model_bias, test = 'Chisq')
 
 # Bootstrap Predictions for Bias -----------------------------------------------
-function_files <-  "boot_glmm.r"
-# Source function files
-lapply(function_files, source)
 
 boot_full_bias <-
   boot.glmm.pred(
     model.res = model_bias, excl.warnings = TRUE,
-    nboots = 10, para = FALSE, level = 0.95,
+    nboots = 1000, para = FALSE, level = 0.95,
     use = c("Condition")
   )
 
@@ -351,50 +345,46 @@ bias_pred_summary <- boot_full_bias$ci.predicted %>%
 # PART 7: VISUALIZATION 4 - BIAS VIOLIN PLOT
 # ==============================================================================
 
+bias_summary$Condition.test <- as.factor(bias_summary$Condition.test)
+bias_pred_summary$Condition.test <- as.factor(bias_pred_summary$Condition.test)
+
+# Quick visualization for side biasing. -.5 = test condition
 violin_bias <- ggplot(bias_summary, aes(x = Condition.test, y = Bias, fill = Condition.test)) + 
+  geom_violin(alpha = .25, color = NA) +
   geom_point(
-    data = bias_summary,
-    aes(x = Condition.test, y = Bias, color = Condition.test), size = 1.5,
-    alpha = .45, position = position_jitter(w = 0.10, h = 0.025)) +
-  geom_violin(
-    data = bias_summary,
-    aes(x = Condition.test, y = Bias, fill = Condition.test),
-    position = position_nudge(x = 0.00),
-    alpha = .25, color = NA) +
-  geom_errorbar(
-    data = bias_pred_summary,
-    aes(
-      x = as.numeric(Condition.test), y = fitted,
-      ymin = lower.cl, ymax = upper.cl, color = Condition.test),
-    width = 0.1, linewidth = 0.5) +
-  geom_point(
-    data = bias_pred_summary,
-    aes(x = as.numeric(Condition.test), y = fitted, fill = Condition.test),
-    size = 2) +
-  #geom_point(
-  #data = boot_full_suf$ci.predicted,
-  #aes(x = as.numeric(Condition), y = fitted, fill = Condition),
-  #size = 2) + 
-  #scale_fill_viridis_d(begin=.25, end= .79, option = "magma") +
-  #scale_color_viridis_d(begin = .25, end = .79, option = "magma") +
-  #labs(title = "Experiment 1") +
+    aes(color = Condition.test), 
+    size = 1.5, alpha = .45, 
+    position = position_jitter(w = 0.015, h = 0.0)
+  ) +
+  geom_line(
+    aes(group = ID),  # Replace 'participant_id' with your actual column name
+    alpha = 0.3, 
+    color = "gray50",
+    linewidth = 0.3
+  ) +
+  # geom_errorbar(
+  #   data = bias_pred_summary,
+  #   aes(x = Condition, y = fitted, ymin = lower.cl, ymax = upper.cl, color = Condition),
+  #   width = 0.1, linewidth = 0.5
+  # ) +
+  # geom_point(
+  #   data = bias_pred_summary,
+  #   aes(x = Condition, y = fitted),
+  #   size = 2
+  # ) +
+  scale_fill_viridis_d(begin = .25, end = .79, option = "magma") +
+  scale_color_viridis_d(begin = .25, end = .79, option = "magma") +
   theme_classic() +
   theme(
     axis.title = element_text(size = 15),
     axis.text = element_text(size = 13),
-    strip.text.x = element_text(size = 13),
     plot.margin = unit(c(1, 1, 1, 1), "cm"),
-    axis.title.y.left = element_text(vjust = 3),
-    plot.title = element_text(color = "black", size = 15, face = "bold"),
-    axis.title.x = element_text(
-      margin =
-        margin(t = 10, r = 0, b = 0, l = 0)
-    ),
+    axis.title.y = element_text(vjust = 3),
+    axis.title.x = element_text(margin = margin(t = 10)),
     legend.position = "none"
   )
 
 violin_bias
-
 
 # ==============================================================================
 # PART 8: BOX CHOICE ANALYSES

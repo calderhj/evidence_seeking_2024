@@ -31,7 +31,7 @@ load("model_plot_sufev6_prelim_Jan15.RData")
 # ==============================================================================
 
 # Load Raw Data ----------------------------------------------------------------
-sufev6_data <- read.csv("sufev_6_data.csv")
+sufev6_data <- read.csv("data/sufev_6_data.csv")
 
 # Data Preprocessing -----------------------------------------------------------
 suf_6 <- sufev6_data %>%
@@ -160,57 +160,9 @@ cat("\n=== Choice Test Only Red ===\n")
 summary(suf_choice_test_red)
 
 
-# ==============================================================================
-# PART 4: VISUALIZATION 1 - PAIRED PLOT
-# ==============================================================================
-
-# Prepare Data for Paired Plot -------------------------------------------------
-x_summary <- suf_6 %>%
-  group_by(ID, Condition.Binary) %>%
-  summarise(average_peek = mean(Peek, na.rm = TRUE), .groups = "drop") %>%
-  ungroup()
-
-# Add Jitter for Visualization (Reproducible) ----------------------------------
-set.seed(012)
-x_summary <- x_summary %>%
-  mutate(
-    jittered_condition = as.numeric(Condition.Binary) + runif(n(), -0.1, 0.1),
-    subject = as.factor(ID)
-  )
-
-# Create Paired Plot -----------------------------------------------------------
-paired_plot <- ggplot(
-  x_summary,
-  aes(x = jittered_condition, y = average_peek, group = ID)
-) +
-  # Lines connecting paired observations
-  geom_line(aes(color = Condition.Binary)) +
-  
-  # Points for each participant in each condition
-  geom_point(aes(color = Condition.Binary), size = 5) +
-  
-  # Styling
-  scale_x_continuous(
-    breaks = c(2, 1),
-    labels = levels(suf_6$Condition),
-    expand = c(0.25, 0.25)
-  ) +
-  labs(
-    x = "Condition",
-    y = "Average Number of Peeks"
-  ) +
-  theme_minimal() +
-  theme(
-    panel.grid = element_blank(),
-    axis.ticks.y = element_line(),
-    panel.border = element_rect(fill = NA, color = "black")
-  )
-
-print(paired_plot)
-
 
 # ==============================================================================
-# PART 5: BOOTSTRAP CONFIDENCE INTERVALS
+# PART 4: BOOTSTRAP CONFIDENCE INTERVALS
 # ==============================================================================
 
 # Source Bootstrap Function ----------------------------------------------------
@@ -238,7 +190,7 @@ boot_full_suf <- boot.glmm.pred(
 
 
 # ==============================================================================
-# PART 6: PREPARE DATA FOR VISUALIZATION
+# PART 5: PREPARE DATA FOR VISUALIZATION
 # ==============================================================================
 
 # Bootstrap Prediction Summaries by Condition ----------------------------------
@@ -259,7 +211,7 @@ suf_individual_agg <- suf_6 %>%
 
 
 # ==============================================================================
-# PART 7: VISUALIZATION 2 - VIOLIN PLOT WITH INDIVIDUAL DATA POINTS
+# PART 6: VISUALIZATION 2 - VIOLIN PLOT WITH INDIVIDUAL DATA POINTS
 # ==============================================================================
 
 # Create Jittered Positions for Visualization ----------------------------------
@@ -359,7 +311,7 @@ violin_suf
 
 
 # ==============================================================================
-# PART 8: VISUALIZATION 3 - INTERACTION PLOT (CONDITION × TRIAL)
+# PART 7: VISUALIZATION 3 - INTERACTION PLOT (CONDITION × TRIAL)
 # ==============================================================================
 
 # Calculate Trial Break Points for X-Axis --------------------------------------
