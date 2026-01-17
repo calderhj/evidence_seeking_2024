@@ -23,7 +23,7 @@ library(tidyverse)
 library(lme4)
 
 # Load Previous Workspace (Optional) -------------------------------------------
-load("model_plot_sufevkids_Jan15.RData")
+load("images/sufev_4_Jan15.RData")
 
 
 # ==============================================================================
@@ -309,13 +309,13 @@ interaction_plot_suf_4 <- ggplot() +
   geom_line(
     data = boot_full_suf_kids$ci.predicted,
     aes(x = z.trial, y = fitted, group = Condition, color = Condition),
-    size = 1.3
+    linewidth = 1.3
   ) +
   
   # Styling
   scale_y_continuous(
     name = "Rate of High-Peeks",
-    breaks = c(0.001, 0.004, 0.007),
+    breaks = c(0.000, 0.010, 0.020),
     labels = scales::percent
   ) +
   scale_x_continuous(
@@ -343,7 +343,7 @@ print(interaction_plot_suf_4)
 # SAVE WORKSPACE
 # ==============================================================================
 
-save.image("model_plot_sufevkids_Jan15.RData")
+save.image("images/sufev_4_Jan15.RData")
 
 # ==============================================================================
 # END OF SCRIPT

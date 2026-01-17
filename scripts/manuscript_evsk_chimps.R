@@ -26,7 +26,7 @@ library(lmerTest)
 options(scipen = 999)
 
 # Load Previous Workspace (Optional) -------------------------------------------
-load("model_plot_evsk_Jan15.RData")
+load("images/evsk_chimps_Jan15.RData")
 
 
 # ==============================================================================
@@ -426,7 +426,7 @@ drop1(model_choice_red, test = "Chisq")
 # SAVE WORKSPACE
 # ==============================================================================
 
-save.image("model_plot_evsk_Jan15.RData")
+save.image("images/evsk_chimps_Jan15.RData")
 
 cat("\n=== Analysis Complete ===\n")
 cat("Workspace saved to: model_plot_evsk_Oct2_2025.RData\n")

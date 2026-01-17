@@ -22,7 +22,7 @@ library(tidyverse)
 library(lme4)
 
 # Load Previous Workspace (Optional) -------------------------------------------
-load("model_plot_sufev_Jan15.RData")
+load("images/sufev_chimps_Jan15.RData")
 
 
 # ==============================================================================
@@ -389,7 +389,7 @@ print(interaction_plot_suf_chimps)
 # SAVE WORKSPACE
 # ==============================================================================
 
-save.image("model_plot_sufev_Jan15.RData")
+save.image("images/sufev_chimps_Jan15.RData")
 
 cat("\n=== Analysis Complete ===\n")
 cat("Workspace saved to: model_plot_sufev_Oct2_2025.RData\n")

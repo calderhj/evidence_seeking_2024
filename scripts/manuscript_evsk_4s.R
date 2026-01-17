@@ -23,7 +23,7 @@ library(tidyverse)
 library(lme4)
 
 # Load Previous Workspace (Optional) -------------------------------------------
-load("evsk_hum_Jan15.RData")
+load("images/evsk_4_Jan15.RData")
 
 
 # ==============================================================================
@@ -545,7 +545,7 @@ interaction_plot_choice
 # SAVE WORKSPACE
 # ==============================================================================
 
-save.image("evsk_hum_Jan15.RData")
+save.image("images/evsk_4_Jan15.RData")
 
 cat("Workspace saved to: evsk_hum_Oct2_2025.RData\n")
 

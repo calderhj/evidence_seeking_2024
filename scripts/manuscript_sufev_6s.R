@@ -23,7 +23,7 @@ library(tidyverse)
 library(lme4)
 
 # Load Previous Workspace (Optional) -------------------------------------------
-load("model_plot_sufev6_prelim_Jan15.RData")
+load("images/sufev_6_Jan15.RData")
 
 
 # ==============================================================================
@@ -383,7 +383,7 @@ print(interaction_plot_suf_6)
 # SAVE WORKSPACE
 # ==============================================================================
 
-save.image("model_plot_sufev6_prelim_Jan15.RData")
+save.image("images/sufev_6_Jan15.RData")
 
 # ==============================================================================
 # END OF SCRIPT
