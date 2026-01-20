@@ -1,0 +1,193 @@
+ID,Condition,Trial,Big Location (test),Small Location (test,Peek,Correct
+1M,test,1,2,4,lp ,no
+1M,test,2,3,1,lp,yes
+1M,test,3,4,3,hp,yes
+1M,test,4,1,2,hp,yes
+1M,control,1,4,1,lp,yes
+1M,control,2,2,3,lp,yes
+1M,control,3,3,4,lp,yes
+1M,control,4,1,2,hp,yes
+1F,test,1,2,4,hp,no
+1F,test,2,3,1,lp,no
+1F,test,3,4,3,hp,yes
+1F,test,4,1,2,hp,yes
+1F,control,1,4,1,hp,yes
+1F,control,2,2,3,hp,yes
+1F,control,3,3,4,hp,yes
+1F,control,4,1,2,hp,yes
+2M,test,1,3,2,hp,yes
+2M,test,2,1,3,hp,yes
+2M,test,3,4,1,hp,yes
+2M,test,4,2,4,hp,yes
+2M,control,1,1,3,lp,yes
+2M,control,2,4,2,hp,yes
+2M,control,3,3,4,hp,yes
+2M,control,4,2,1,hp,yes
+2F,test,1,3,2,lp,yes
+2F,test,2,1,3,lp,yes
+2F,test,3,4,1,lp,yes
+2F,test,4,2,4,lp,yes
+2F,control,1,1,3,hp,yes
+2F,control,2,4,2,lp,yes
+2F,control,3,3,4,lp,yes
+2F,control,4,2,1,lp,yes
+3M,test,1,2,4,lp,yes
+3M,test,2,3,1,lp,yes
+3M,test,3,4,3,lp,no
+3M,test,4,1,2,lp,yes
+3M,control,1,4,1,lp,yes
+3M,control,2,2,3,lp,yes
+3M,control,3,3,4,lp,yes
+3M,control,4,1,2,lp,yes
+3F,test,1,2,4,lp,no
+3F,test,2,3,1,lp ,yes
+3F,test,3,4,3,lp,no
+3F,test,4,1,2,lp,no
+3F,control,1,4,1,lp,yes
+3F,control,2,2,3,lp,yes
+3F,control,3,3,4,lp,yes
+3F,control,4,1,2,lp,yes
+4M,test,1,3,2,lp,yes
+4M,test,2,1,3,lp,yes
+4M,test,3,4,1,lp,no
+4M,test,4,2,4,lp,no
+4M,control,1,1,3,lp,yes
+4M,control,2,4,2,lp,yes
+4M,control,3,3,4,lp,yes
+4M,control,4,2,1,lp,yes
+4F,test,1,3,2,lp,yes
+4F,test,2,1,3,lp,yes
+4F,test,3,4,1,lp,no
+4F,test,4,2,4,lp,yes
+4F,control,1,1,3,lp,yes
+4F,control,2,4,2,lp,yes
+4F,control,3,3,4,lp,yes
+4F,control,4,2,1,lp,yes
+5M,test,1,2,4,hp,yes
+5M,test,2,3,1,hp,no
+5M,test,3,4,3,hp,no
+5M,test,4,1,2,hp,no
+5M,control,1,4,1,hp,yes
+5M,control,2,2,3,hp,yes
+5M,control,3,3,4,hp,yes
+5M,control,4,1,2,hp,yes
+5F,test,1,2,4,lp,no
+5F,test,2,3,1,hp,no
+5F,test,3,4,3,hp,yes
+5F,test,4,1,2,hp,yes
+5F,control,1,4,1,lp,yes
+5F,control,2,2,3,lp,yes
+5F,control,3,3,4,lp,yes
+5F,control,4,1,2,hp,yes
+6M,test,1,3,2,hp,yes
+6M,test,2,1,3,hp,yes
+6M,test,3,4,1,hp,yes
+6M,test,4,2,4,hp,yes
+6M,control,1,1,3,lp,yes
+6M,control,2,4,2,hp,yes
+6M,control,3,3,4,hp,yes
+6M,control,4,2,1,hp,yes
+6F,test,1,3,2,hp,yes
+6F,test,2,1,3,hp,yes
+6F,test,3,4,1,hp,yes
+6F,test,4,2,4,hp,yes
+6F,control,1,1,3,hp,yes
+6F,control,2,4,2,hp,yes
+6F,control,3,3,4,hp,yes
+6F,control,4,2,1,hp,yes
+7M,control,1,1,3,hp,no
+7M,control,2,4,2,hp,yes
+7M,control,3,3,4,hp,yes
+7M,control,4,2,1,hp,yes
+7M,test,1,3,2,lp ,yes
+7M,test,2,1,3,lp,yes
+7M,test,3,4,1,lp ,no
+7M,test,4,2,4,lp ,no
+7F,control,1,1,3,lp ,yes
+7F,control,2,4,2,lp ,yes
+7F,control,3,3,4,lp ,yes
+7F,control,4,2,1,lp,yes
+7F,test,1,3,2,lp,yes
+7F,test,2,1,3,lp,yes
+7F,test,3,4,1,lp,yes
+7F,test,4,2,4,lp ,no
+8M,control,1,3,2,hp,yes
+8M,control,2,1,3,lp,no
+8M,control,3,4,1,lp,yes
+8M,control,4,2,4,lp,yes
+8M,test,1,4,1,lp,yes
+8M,test,2,2,3,hp,yes
+8M,test,3,3,4,hp,yes
+8M,test,4,1,2,hp,yes
+8F,control,1,4,1,lp ,yes
+8F,control,2,2,3,lp ,yes
+8F,control,3,3,4,lp ,yes
+8F,control,4,1,2,lp ,yes
+8F,test,1,2,4,hp,yes
+8F,test,2,3,1,hp,yes
+8F,test,3,4,3,hp,yes
+8F,test,4,1,2,hp,yes
+9M,control,1,4,1,lp,yes
+9M,control,2,2,3,hp,yes
+9M,control,3,3,4,lp ,yes
+9M,control,4,1,2,lp,yes
+9M,test,1,2,4,lp,yes
+9M,test,2,3,1,lp,yes
+9M,test,3,4,3,lp,no
+9M,test,4,1,2,lp,no
+9F,control,1,4,1,lp,yes
+9F,control,2,2,3,lp,yes
+9F,control,3,3,4,lp,yes
+9F,control,4,1,2,lp,yes
+9F,test,1,2,4,lp ,no
+9F,test,2,3,1,lp,no
+9F,test,3,4,3,lp ,yes
+9F,test,4,1,2,lp,yes
+10M,control,1,4,1,lp,yes
+10M,control,2,2,3,lp,yes
+10M,control,3,3,4,hp,yes
+10M,control,4,1,2,hp,yes
+10M,test,1,2,4,lp ,no
+10M,test,2,3,1,lp ,no
+10M,test,3,4,3,lp ,no
+10M,test,4,1,2,lp ,yes
+10F,control,1,4,1,hp,yes
+10F,control,2,2,3,hp,yes
+10F,control,3,3,4,hp,yes
+10F,control,4,1,2,lp,yes
+10F,test,1,2,4,lp,no
+10F,test,2,3,1,lp,no
+10F,test,3,4,3,lp,yes
+10F,test,4,1,2,lp,no
+11M,control,1,1,3,lp,yes
+11M,control,2,4,2,lp,yes
+11M,control,3,3,4,lp,yes
+11M,control,4,2,1,lp,yes
+11M,test,1,3,2,lp,yes
+11M,test,2,1,3,lp,yes
+11M,test,3,4,1,lp,no
+11M,test,4,2,4,lp,yes
+11F,control,1,1,3,lp,yes
+11F,control,2,4,2,lp,yes
+11F,control,3,3,4,lp,yes
+11F,control,4,2,1,lp,yes
+11F,test,1,3,2,lp,yes
+11F,test,2,1,3,lp,no
+11F,test,3,4,1,lp,no
+11F,test,4,2,4,lp,no
+12M,control,1,4,1,lp,yes
+12M,control,2,2,3,lp,yes
+12M,control,3,3,4,lp,yes
+12M,control,4,1,2,lp,yes
+12M,test,1,2,4,lp,yes
+12M,test,2,3,1,lp,yes
+12M,test,3,4,3,lp,no
+12M,test,4,1,2,lp,no
+12F,control,1,4,1,hp,yes
+12F,control,2,2,3,lp,yes
+12F,control,3,3,4,lp,yes
+12F,control,4,1,2,lp,yes
+12F,test,1,2,4,lp,yes
+12F,test,2,3,1,lp,no
+12F,test,3,4,3,lp,no
+12F,test,4,1,2,lp,yes
