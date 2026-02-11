@@ -62,6 +62,10 @@ suf_4 <- data_suf_4 %>%
   )
 
 
+suf_4_trial_1 <- subset(suf_4, suf_4$Trial == 1)
+
+
+
 # ==============================================================================
 # PART 2: STATISTICAL MODELS - PEEKING BEHAVIOR
 # ==============================================================================
@@ -82,7 +86,17 @@ suf_4_full <- glmer(
 
 summary(suf_4_full)
 
-# Model 2: Reduced Model (Additive Effects Only) ------------------------------
+# Model 2: Trial 1 GLM ------------------------------
+
+suf_4_full_glm <- glm(
+  Peek ~ Condition,
+  data = suf_4_trial_1,
+  family = binomial(link = "logit")
+)
+
+drop1(suf_4_full_glm, test = "Chisq")
+
+# Model 3: Reduced Model (Additive Effects Only) ------------------------------
 suf_4_red <- glmer(
   Peek ~ Condition + z.trial + (1 + z.trial | ID),
   data = suf_4,
@@ -92,13 +106,14 @@ suf_4_red <- glmer(
 
 summary(suf_4_red)
 
-# Model 3: Null Model (Random Effects Only) -----------------------------------
+# Model 4: Null Model (Random Effects Only) -----------------------------------
 suf_4_null <- glmer(
   Peek ~ 1 + (1 + z.trial | ID),
   data = suf_4,
   control = contr,
   family = binomial(link = "logit")
 )
+
 
 # Extract Variance Components --------------------------------------------------
 VarCorr(suf_4_red)
