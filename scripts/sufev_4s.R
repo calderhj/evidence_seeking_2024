@@ -23,7 +23,7 @@ library(tidyverse)
 library(lme4)
 
 # Load Previous Workspace (Optional) -------------------------------------------
-load("images/sufev_4_Jan15.RData")
+load("images/sufev_4_Feb10.RData")
 
 
 # ==============================================================================
@@ -74,7 +74,7 @@ contr <- glmerControl(
 
 # Model 1: Full Model (Condition × Trial Interaction) -------------------------
 suf_4_full <- glmer(
-  Peek ~ Condition * z.trial + (1 + z.trial + Condition.test | ID),
+  Peek ~ Condition * z.trial + (1 + z.trial | ID),
   data = suf_4,
   control = contr,
   family = binomial(link = "logit")
@@ -84,7 +84,7 @@ summary(suf_4_full)
 
 # Model 2: Reduced Model (Additive Effects Only) ------------------------------
 suf_4_red <- glmer(
-  Peek ~ Condition + z.trial + (1 + Condition.test + z.trial | ID),
+  Peek ~ Condition + z.trial + (1 + z.trial | ID),
   data = suf_4,
   control = contr,
   family = binomial(link = "logit")
@@ -94,7 +94,7 @@ summary(suf_4_red)
 
 # Model 3: Null Model (Random Effects Only) -----------------------------------
 suf_4_null <- glmer(
-  Peek ~ 1 + (1 + z.trial + Condition.test | ID),
+  Peek ~ 1 + (1 + z.trial | ID),
   data = suf_4,
   control = contr,
   family = binomial(link = "logit")
@@ -315,7 +315,7 @@ interaction_plot_suf_4 <- ggplot() +
   # Styling
   scale_y_continuous(
     name = "Rate of High-Peeks",
-    breaks = c(0.000, 0.010, 0.020),
+    breaks = c(0, .25, .50, .75, 1.0),
     labels = scales::percent
   ) +
   scale_x_continuous(
@@ -343,7 +343,7 @@ print(interaction_plot_suf_4)
 # SAVE WORKSPACE
 # ==============================================================================
 
-save.image("images/sufev_4_Jan15.RData")
+save.image("images/sufev_4_Feb10.RData")
 
 # ==============================================================================
 # END OF SCRIPT
