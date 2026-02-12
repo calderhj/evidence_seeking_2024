@@ -417,7 +417,7 @@ choice_dat <- xdata %>%
 choice_dat$Choice <- as.numeric(choice_dat$Choice)
 
 # Model 1: Full Choice Model (Condition × Trial Interaction) ------------------
-model_choice_full <- glmer(Choice ~ Condition * z.trial + (1 + Condition.test | ID), 
+model_choice_full <- glmer(Choice ~ Condition * z.trial + (1 + Condition.test * z.trial| ID), 
                            data = choice_dat,
                            control = contr,
                            family = binomial(link = "logit"))
@@ -425,19 +425,21 @@ model_choice_full <- glmer(Choice ~ Condition * z.trial + (1 + Condition.test | 
 summary(model_choice_full)
 
 # Model 2: Reduced Choice Model ------------------------------------------------
-model_choice_red <- glmer(Peek ~ Condition + z.trial + (1 + Condition.test | ID), 
+model_choice_red <- glmer(Choice ~ Condition + z.trial + (1 + Condition.test * z.trial | ID), 
                           data = choice_dat,
                           control = contr,
                           family = binomial(link = "logit"))
 
+summary(model_choice_red)
+
 # Model 3: Null Choice Model ---------------------------------------------------
-model_choice_null <- glmer(Peek ~ 1 + (1 + Condition.test | ID), 
+model_choice_null <- glmer(Choice ~ 1 + (1 + Condition.test | ID), 
                            data = choice_dat,
                            control = contr,
                            family = binomial(link = "logit"))
 
 # Test Term Significance -------------------------------------------------------
-drop1(model_choice_full, test = 'Chisq')
+drop1(model_choice_red, test = 'Chisq')
 
 # Filter Data by Condition -----------------------------------------------------
 choice_dat_ambiguous <- choice_dat %>%
@@ -447,11 +449,6 @@ choice_dat_ambiguous <- choice_dat %>%
 choice_dat_unambiguous <- choice_dat %>%
   filter(Condition == 'unambiguous')
 
-# Additional Choice Model ------------------------------------------------------
-peek_choice_full <- glmer(Choice ~ Condition + z.trial + (1 + Condition.test | ID), 
-                          data = choice_dat,
-                          control = contr,
-                          family = binomial(link = "logit"))
 
 # Tabulate Choices in Unambiguous Condition ------------------------------------
 table(choice_dat_unambiguous$Choice)
@@ -547,7 +544,7 @@ interaction_plot_choice
 
 save.image("images/evsk_4_Jan15.RData")
 
-cat("Workspace saved to: evsk_hum_Oct2_2025.RData\n")
+
 
 # ==============================================================================
 # END OF SCRIPT
