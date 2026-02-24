@@ -275,7 +275,7 @@ violin_suf_kids <- ggplot(
     axis.title = element_text(size = 15),
     axis.text = element_text(size = 13),
     strip.text.x = element_text(size = 13),
-    plot.margin = unit(c(1, 1, 1, 1), "cm"),
+    plot.margin = unit(c(.1, .05, .22, .30), "cm"),
     axis.title.y.left = element_text(vjust = 3),
     plot.title = element_text(color = "black", size = 15, face = "bold"),
     axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)),
@@ -345,7 +345,7 @@ interaction_plot_suf_4 <- ggplot() +
     axis.title = element_text(size = 15),
     axis.text = element_text(size = 13),
     strip.text.x = element_text(size = 13),
-    plot.margin = unit(c(1, 1, 1, 1), "cm"),
+    plot.margin = unit(c(-.1, .1, .22, .30), "cm"),
     axis.title.y.left = element_text(vjust = 3),
     axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)),
     legend.position = "right"

@@ -187,14 +187,14 @@ interaction_plot <- ggplot() +
     breaks = trial_breaks,
     labels = 1:12
   ) +
-  scale_fill_viridis_d(begin = 0.25, end = 0.75, option = "magma", labels = str_to_title) +
-  scale_color_viridis_d(begin = 0.25, end = 0.75, option = "magma", labels = str_to_title) +
+  scale_fill_viridis_d(begin = 0.75, end = 0.25, option = "magma", labels = str_to_title) +
+  scale_color_viridis_d(begin = 0.75, end = 0.25, option = "magma", labels = str_to_title) +
   theme_classic() +
   theme(
     axis.title = element_text(size = 15),
     axis.text = element_text(size = 13),
     strip.text.x = element_text(size = 13),
-    plot.margin = unit(c(1, 1, 1, 1), "cm"),
+    plot.margin = unit(c(-.4, .22, .22, .3), "cm"),
     axis.title.y.left = element_text(vjust = 3),
     plot.title = element_text(color = "black", size = 15, face = "bold"),
     axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)),
@@ -233,13 +233,19 @@ jitter_values <- data.frame(
   jitter = runif(length(unique(individual_agg$ID)), -0.05, 0.05)
 )
 
+
 # Add jitter to individual_agg
 individual_agg_jittered <- individual_agg %>%
   left_join(jitter_values, by = "ID") %>%
   mutate(
-    x_num = ifelse(Condition == "unambiguous", 1, 2),
+    x_num = ifelse(Condition == "Unambiguous", 1, 2),  # reversed to match limits = rev
     x_jittered = x_num + jitter
   )
+
+# Add x_num to ci_predicted_summary to match
+ci_predicted_summary <- ci_predicted_summary %>%
+  mutate(x_num = ifelse(Condition == "Unambiguous", 1, 2))
+
 
 # Create Violin Plot -----------------------------------------------------------
 violin_evsk <- ggplot(
@@ -274,9 +280,9 @@ violin_evsk <- ggplot(
     aes(x = Condition, y = fitted),
     size = 2
   ) +
-  scale_fill_viridis_d(begin = 0.25, end = 0.75, option = "magma") +
-  scale_color_viridis_d(begin = 0.25, end = 0.75, option = "magma") +
-  scale_x_discrete(limits = rev, labels = str_to_title) +
+  scale_fill_viridis_d(begin = 0.75, end = 0.25, option = "magma") +
+  scale_color_viridis_d(begin = 0.75, end = 0.25, option = "magma") +
+  scale_x_discrete(labels = str_to_title) +
   scale_y_continuous(
     name = "Peeking Rate",
     breaks = c(0, 0.25, 0.5, 0.75, 1.0),
@@ -287,7 +293,7 @@ violin_evsk <- ggplot(
     axis.title = element_text(size = 15),
     axis.text = element_text(size = 13),
     strip.text.x = element_text(size = 13),
-    plot.margin = unit(c(1, 1, 1, 1), "cm"),
+    plot.margin = unit(c(.22, .22, .22, .3), "cm"),
     axis.title.y.left = element_text(vjust = 3),
     plot.title = element_text(color = "black", size = 15, face = "bold"),
     axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)),

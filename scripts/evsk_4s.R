@@ -269,7 +269,7 @@ violin_hum_evsk <- ggplot(
     axis.title = element_text(size = 15),
     axis.text = element_text(size = 13),
     strip.text.x = element_text(size = 13),
-    plot.margin = unit(c(1, 1, 1, 1), "cm"),
+    plot.margin = unit(c(0.05, 0.05, 0.22, 0.30), "cm"),
     axis.title.y.left = element_text(vjust = 3),
     axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)),
     legend.position = "none"
@@ -287,64 +287,8 @@ trial_breaks <- sapply(1:12, function(x) {
   (x - mean(xdata$Trial)) / sd(xdata$Trial)
 })
 
-# Create Interaction Plot (Version 1) ------------------------------------------
-interaction_plot_hum <- ggplot() +
-  # Raw data points (commented out)
-  #geom_point(
-  #  data = xdata,
-  #  aes(x = z.trial, y = Peek, fill = Condition),
-  #  size = 2.5,
-  #  alpha = 0.8,
-  #  shape = 21,
-  #  color = "black",
-  #  position = position_jitter(width = 0.1, height = 0.05, seed = 81293)
-  #) +
-  
-  # Confidence ribbons
-  geom_ribbon(
-    data = boot_full$ci.predicted,
-    aes(
-      ymin = lower.cl,
-      ymax = upper.cl,
-      x = z.trial,
-      group = Condition,
-      fill = Condition
-    ),
-    alpha = 0.2
-  ) +
-  
-  # Fitted lines
-  geom_line(
-    data = boot_full$ci.predicted,
-    aes(x = z.trial, y = fitted, group = Condition, color = Condition),
-    size = 1.3
-  ) +
-  
-  # Styling
-  scale_y_continuous(
-    name = "Rate of Peeking",
-    breaks = c(0, .25, .50, .75, 1.0),
-    labels = scales::percent
-  ) +
-  scale_x_continuous(
-    name = "Trial",
-    breaks = trial_breaks,
-    labels = 1:12
-  ) +
-  scale_fill_viridis_d(begin = 0.75, end = 0.25, option = "magma", labels = str_to_title) +
-  scale_color_viridis_d(begin = 0.75, end = 0.25, option = "magma", labels = str_to_title) +
-  theme_classic() +
-  theme(
-    axis.title = element_text(size = 15),
-    axis.text = element_text(size = 13),
-    strip.text.x = element_text(size = 13),
-    plot.margin = unit(c(1, 1, 1, 1), "cm"),
-    axis.title.y.left = element_text(vjust = 3),
-    axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)),
-    legend.position = "right"
-  )
+# Create Interaction Plot ------------------------------------------
 
-# Create Interaction Plot (Version 2 - with explicit breaks) ------------------
 interaction_plot_hum <- ggplot() +
   # Confidence ribbons
   geom_ribbon(
@@ -363,7 +307,7 @@ interaction_plot_hum <- ggplot() +
   geom_line(
     data = boot_full$ci.predicted,
     aes(x = z.trial, y = fitted, group = Condition, color = Condition),
-    size = 1.3
+    linewidth = 1.3
   ) +
   
   # Styling
@@ -396,7 +340,7 @@ interaction_plot_hum <- ggplot() +
     axis.title = element_text(size = 15),
     axis.text = element_text(size = 13),
     strip.text.x = element_text(size = 13),
-    plot.margin = unit(c(1, 1, 1, 1), "cm"),
+    plot.margin = unit(c(.22, .22, .22, .30), "cm"),
     axis.title.y.left = element_text(vjust = 3),
     axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)),
     legend.position = "right"

@@ -300,7 +300,7 @@ violin_suf <- ggplot(
     axis.title = element_text(size = 15),
     axis.text = element_text(size = 13),
     strip.text.x = element_text(size = 13),
-    plot.margin = unit(c(1, 1, 1, 1), "cm"),
+    plot.margin = unit(c(.2, 0, .2, .3), "cm"),
     axis.title.y.left = element_text(vjust = 3),
     plot.title = element_text(color = "black", size = 15, face = "bold"),
     axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)),
@@ -370,7 +370,7 @@ interaction_plot_suf_6 <- ggplot() +
     axis.title = element_text(size = 15),
     axis.text = element_text(size = 13),
     strip.text.x = element_text(size = 13),
-    plot.margin = unit(c(1, 1, 1, 1), "cm"),
+    plot.margin = unit(c(.06, -.05, .1, .3), "cm"),
     axis.title.y.left = element_text(vjust = 3),
     axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)),
     legend.position = "right"
