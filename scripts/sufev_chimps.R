@@ -61,6 +61,7 @@ suf_data <- mydata_suf %>%
   )
 
 
+
 # Dataset with only test condition to test whether they were more likely to choose correctly when peeking
 
 suf_data_test <- suf_data %>%
@@ -126,8 +127,8 @@ suf_choice_model_red <- glmer(
 ## Just test
 
 suf_choice_test <- glmer(
-  choice ~ Peek * z.trial + (1 + z.trial * Condition.test | ID),
-  data = suf_data,
+  choice ~ Peek * z.trial + (1 + z.trial | ID),
+  data = suf_data_test,
   control = contr,
   family = binomial(link = "logit")
 )
@@ -135,8 +136,8 @@ suf_choice_test <- glmer(
 # Reduced Model
 
 suf_choice_test_red <- glmer(
-  choice ~ Peek + z.trial + (1 + z.trial * Condition.test | ID),
-  data = suf_data,
+  choice ~ Peek + z.trial + (1 + z.trial | ID),
+  data = suf_data_test,
   control = contr,
   family = binomial(link = "logit")
 )
@@ -165,6 +166,10 @@ summary(suf_choice_test)
 
 cat("\n=== Choice Test Only Red ===\n")
 summary(suf_choice_test_red)
+
+drop1(suf_choice_test_red, test = "Chisq")
+
+
 
 
 # ==============================================================================
@@ -383,6 +388,149 @@ interaction_plot_suf_chimps <- ggplot() +
   )
 
 print(interaction_plot_suf_chimps)
+
+
+
+# ==============================================================================
+# For Revisions
+# ==============================================================================
+
+### Do they pick above chance when high-peeking in the size-inconsistent condition
+
+suf_data_test_hp <- suf_data_test %>%
+  filter(Peek == 1)
+
+table(suf_data_test_hp$Choice)
+
+suf_choice_test2 <- glmer(
+  choice ~ Peek * z.trial + (1 + z.trial * Condition.test | ID),
+  data = suf_data_test,
+  control = contr,
+  family = binomial(link = "logit")
+)
+
+summary(suf_choice_test2)
+
+suf_choice_test2_red <- glmer(
+  choice ~ Peek + z.trial + (1 + z.trial | ID),
+  data = suf_data_test,
+  control = contr,
+  family = binomial(link = "logit")
+)
+
+summary(suf_choice_test2_red)
+
+
+suf_choice_test2_null <- glmer(
+  choice ~ 1 + (1 + z.trial | ID),
+  data = suf_data_test,
+  control = contr,
+  family = binomial(link = "logit")
+)
+
+summary(suf_choice_test2_null)
+
+anova(suf_choice_test2_red, suf_choice_test2_null)
+
+
+###only hp and test condition
+
+suf_hp_test <- suf_data_test %>%
+  filter(Peek == 1)
+
+suf_hp_test_choice <- glmer(
+  choice ~ 1 + (1 + z.trial | ID),
+  data = suf_hp_test,
+  control = contr,
+  family = binomial(link = "logit")
+)
+
+summary(suf_hp_test_choice)
+
+## Is there a difference in the main comparison if we account for repeated subjects across studies?
+
+suf_data$repeated <- ifelse(suf_data$ID %in% c(4, 5, 9, 12), 0, 1)
+
+### Three way interaction
+suf_model_repeat_full <- glmer(
+  Peek ~ Condition * z.trial * repeated + (1 + z.trial * Condition.test | ID),
+  data = suf_data,
+  control = contr,
+  family = binomial(link = "logit")
+)
+
+summary(suf_model_repeat_full)
+drop1(suf_model_repeat_full, test = "Chisq")
+
+
+### All two way interactions
+
+suf_model_repeat_red <- glmer(
+  Peek ~ (Condition + repeated + z.trial)^2 + (1 + z.trial * Condition.test | ID),
+  data = suf_data,
+  control = contr,
+  family = binomial(link = "logit")
+)
+
+
+summary(suf_model_repeat_red)
+drop1(suf_model_repeat_red, test = "Chisq")
+
+## Full reduced
+suf_model_repeat_red2 <- glmer(
+  Peek ~ Condition * repeated + z.trial + (1 + z.trial * Condition.test | ID),
+  data = suf_data,
+  control = contr,
+  family = binomial(link = "logit")
+)
+
+summary(suf_model_repeat_red2)
+drop1(suf_model_repeat_red2, test = "Chisq")
+
+### The model from which we get the effects we report
+drop1(suf_model_peek_red, test = "Chisq")
+
+plot(Effect(c("repeated"), suf_model_repeat_red2))
+
+### ---- Effect of familiarization length
+
+suf_data$fam_length <- as.numeric(scale(suf_data$fam_length))
+
+model_fam_full_full <- glmer(
+  Peek ~ Condition * fam_length * z.trial + (1 + z.trial * Condition.test | ID),
+  data = suf_data,
+  control = contr,
+  family = binomial(link = "logit")
+)
+
+summary(model_fam_full_full)
+
+drop1(model_fam_full_full, test = "Chisq")
+
+
+model_fam_full_two_way <- glmer(
+  Peek ~ (Condition + fam_length + z.trial)^2 + (1 + z.trial * Condition.test | ID),
+  data = suf_data,
+  control = contr,
+  family = binomial(link = "logit")
+)
+
+summary(model_fam_full_two_way)
+
+drop1(model_fam_full_two_way, test = "Chisq")
+
+
+model_fam_full_red <- glmer(
+  Peek ~ (Condition * fam_length) + z.trial + (1 + z.trial * Condition.test | ID),
+  data = suf_data,
+  control = contr,
+  family = binomial(link = "logit")
+)
+
+summary(model_fam_full_red)
+
+drop1(model_fam_full_red, test = "Chisq")
+
 
 
 # ==============================================================================

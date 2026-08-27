@@ -385,6 +385,8 @@ model_choice_null <- glmer(Choice ~ 1 + (1 + Condition.test | ID),
 # Test Term Significance -------------------------------------------------------
 drop1(model_choice_red, test = 'Chisq')
 
+plot(Effect(c("Condition", "z.trial"), model_choice_red))
+
 # Filter Data by Condition -----------------------------------------------------
 choice_dat_ambiguous <- choice_dat %>%
   filter(Condition == 'ambiguous') %>%
@@ -480,6 +482,25 @@ interaction_plot_choice <- ggplot() +
   )
 
 interaction_plot_choice
+
+
+# ==============================================================================
+# For Reviews
+# ==============================================================================
+
+
+### Does instruction predict performance?
+
+model_inst_red <- glmer(
+  Peek ~ Condition * instruction + z.trial + (1 + z.trial * Condition.test | ID),
+  data = xdata,
+  control = contr,
+  family = binomial(link = "logit")
+)
+
+summary(model_inst_red)
+
+drop1(model_inst_red, test = "Chisq")
 
 
 # ==============================================================================

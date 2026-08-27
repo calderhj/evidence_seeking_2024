@@ -21,6 +21,7 @@
 library(tidyverse)
 library(lme4)
 library(lmerTest)
+library(effects)
 
 # R Settings -------------------------------------------------------------------
 options(scipen = 999)
@@ -111,7 +112,30 @@ summary(model_peek_full)
 cat("\n=== Term Significance (Full Model) ===\n")
 drop1(model_peek_full, test = "Chisq")
 
+drop1(model_peek_red, test = "Chisq")
 
+### first four trials chimps
+xdata_first4 <- xdata %>% filter(Trial %in% c(1, 2, 3, 4))
+
+### Full model
+model_4_full <- glmer(
+  Peek ~ Condition * z.trial + (1 + z.trial * Condition.test | ID),
+  data = xdata_first4,
+  control = contr,
+  family = binomial(link = "logit")
+)
+
+summary(model_4_full)
+
+### Reduced Model
+model_4_red <- glmer(
+  Peek ~ Condition + z.trial + (1 + z.trial * Condition.test | ID),
+  data = xdata_first4,
+  control = contr,
+  family = binomial(link = "logit")
+)
+
+summary(model_4_red)
 
 # ==============================================================================
 # PART 3: BOOTSTRAP CONFIDENCE INTERVALS
@@ -404,7 +428,7 @@ choice_dat <- xdata %>%
 choice_dat$Choice <- as.numeric(choice_dat$Choice)
 
 # Model 1: Full Choice Model ---------------------------------------------------
-model_choice_full <- glmer(Choice ~ Condition * z.trial + (1 + Condition.test | ID), 
+model_choice_full <- glmer(Choice ~ Condition * z.trial + (1 + Condition.test * z.trial | ID), 
                            data = choice_dat,
                            control = contr,
                            family = binomial(link = "logit"))
@@ -412,13 +436,13 @@ model_choice_full <- glmer(Choice ~ Condition * z.trial + (1 + Condition.test | 
 summary(model_choice_full)
 
 # Model 2: Reduced Choice Model ------------------------------------------------
-model_choice_red <- glmer(Peek ~ Condition + z.trial + (1 + Condition.test | ID), 
+model_choice_red <- glmer(Choice ~ Condition + z.trial + (1 + Condition.test * z.trial | ID), 
                           data = choice_dat,
                           control = contr,
                           family = binomial(link = "logit"))
 
 # Model 3: Null Choice Model ---------------------------------------------------
-model_choice_null <- glmer(Peek ~ 1 + (1 + Condition.test | ID), 
+model_choice_null <- glmer(Choice ~ 1 + (1 + Condition.test * z.trial | ID), 
                            data = choice_dat,
                            control = contr,
                            family = binomial(link = "logit"))
@@ -427,6 +451,124 @@ model_choice_null <- glmer(Peek ~ 1 + (1 + Condition.test | ID),
 summary(model_choice_red)
 drop1(model_choice_red, test = "Chisq")
 
+### Only test 
+
+test_choice <- choice_dat %>%
+  filter(Condition == "Ambiguous")
+
+model_choice_test_full <- glmer(Choice ~ Peek * z.trial + (1 + z.trial | ID), 
+                                data = test_choice,
+                                control = contr,
+                                family = binomial(link = "logit"))
+
+summary(model_choice_test_full)
+
+drop1(model_choice_test_full, test = "Chisq")
+
+model_choice_test <- glmer(Choice ~ Peek + z.trial + (1 + z.trial | ID), 
+                           data = test_choice,
+                           control = contr,
+                           family = binomial(link = "logit"))
+
+drop1(model_choice_test, test = "Chisq")
+
+boot_full_choice_test <- boot.glmm.pred(
+  model.res = model_choice_test_full,
+  excl.warnings = TRUE,
+  nboots = 1000,
+  para = FALSE,
+  level = 0.95,
+  use = c("Condition", "z.trial")
+)
+
+# ==============================================================================
+# For Review
+# ==============================================================================
+
+# does length of familiarization influence result?
+
+lookup <- c("1"=9, "2"=10, "3"=13, "4"=15, "5"=10, 
+            "6"=12, "7"=8, "8"=14, "9"=12, "10"=16)
+
+xdata$familiarization <- as.numeric(scale(lookup[as.character(xdata$ID)]))
+
+
+### The full full model
+
+model_fam_full_full <- glmer(
+  Peek ~ Condition * familiarization * z.trial + (1 + z.trial * Condition.test | ID),
+  data = xdata,
+  control = contr,
+  family = binomial(link = "logit")
+)
+
+summary(model_fam_full_full)
+
+drop1(model_fam_full_full, test = "Chisq")
+
+
+model_fam_full_two_way <- glmer(
+  Peek ~ (Condition + familiarization + z.trial)^2 + (1 + z.trial * Condition.test | ID),
+  data = xdata,
+  control = contr,
+  family = binomial(link = "logit")
+)
+
+summary(model_fam_full_two_way)
+
+drop1(model_fam_full_two_way, test = "Chisq")
+
+
+model_fam_full_red <- glmer(
+  Peek ~ (Condition * z.trial) + familiarization + (1 + z.trial * Condition.test | ID),
+  data = xdata,
+  control = contr,
+  family = binomial(link = "logit")
+)
+
+summary(model_fam_full_red)
+
+drop1(model_fam_full_red, test = "Chisq")
+
+
+# Just the interaction term
+plot(Effect(c("familiarization"), model_fam_full_red))
+
+
+
+
+#### Choice accuracy and fam2 time
+
+lookup2 <- c("1"=7, "2"=8, "3"=6, "4"=10, "5"=2, 
+            "6"=10, "7"=4, "8"=7, "9"=4, "10"=11)
+
+
+choice_dat$fam2 <- as.numeric(scale(lookup2[as.character(choice_dat$ID)]))
+
+fam2_peek_choice <- choice_dat %>%
+  filter(Condition == "Ambiguous") %>%
+  filter(Peek == 1)
+
+fam2_choice_full <- glmer(Choice ~ fam2 * z.trial + (1 + z.trial | ID), 
+                          data = fam2_peek_choice,
+                          control = contr,
+                          family = binomial(link = "logit"))
+
+summary(fam2_choice_full)
+
+fam2_choice <- glmer(Choice ~ fam2 + (1 | ID), 
+                    data = fam2_peek_choice,
+                    control = contr,
+                    family = binomial(link = "logit"))
+
+summary(fam2_choice)
+
+choice_null <- glmer(Choice ~ 1 + (1 | ID), 
+                     data = fam2_peek_choice,
+                     control = contr,
+                     family = binomial(link = "logit"))
+
+summary(choice_null)
 
 # ==============================================================================
 # SAVE WORKSPACE
