@@ -7,14 +7,12 @@
 #   mixed-effects logistic regression models and creates visualizations for
 #   human participant data.
 #
-# Author: Calder Hilde-Jones
-# Last Modified: Jan 15, 2025
 # 
 # Requirements:
 #   - R packages: tidyverse, PairedData, lme4
 #   - Data file: evsk_humans.csv
 #   - Function file: boot_glmm.r
-#   - Workspace file (optional): evsk_hum_Oct2_2025.RData
+#   
 #
 # ==============================================================================
 
@@ -23,7 +21,7 @@ library(tidyverse)
 library(lme4)
 
 # Load Previous Workspace (Optional) -------------------------------------------
-load("images/evsk_4_Jan15.RData")
+load("images/evsk_4_image.RData")
 
 
 # ==============================================================================
@@ -123,11 +121,11 @@ drop1(model_peek_red, test = "Chisq")
 # ==============================================================================
 
 # Source Bootstrap Function ----------------------------------------------------
-source("scripts/boot_glmm.r")
+source("scripts/boot_glmm_submission.r")
 
 # Generate Bootstrap Predictions (Condition × Trial) ---------------------------
 boot_full <- boot.glmm.pred(
-  model.res = model_peek_red,
+  model.res = model_peek_full,
   excl.warnings = TRUE,
   nboots = 1000,
   para = FALSE,
@@ -384,9 +382,7 @@ model_choice_null <- glmer(Choice ~ 1 + (1 + Condition.test | ID),
 
 # Test Term Significance -------------------------------------------------------
 drop1(model_choice_red, test = 'Chisq')
-
-plot(Effect(c("Condition", "z.trial"), model_choice_red))
-
+drop1(model_choice_full, test = 'Chisq')
 # Filter Data by Condition -----------------------------------------------------
 choice_dat_ambiguous <- choice_dat %>%
   filter(Condition == 'ambiguous') %>%
@@ -408,7 +404,7 @@ table(choice_dat_unambiguous$Choice)
 boot_choice_full <- boot.glmm.pred(
   model.res = model_choice_full,
   excl.warnings = TRUE,
-  nboots = 100,
+  nboots = 1000,
   para = FALSE,
   level = 0.95,
   use = c("Condition", "z.trial")
@@ -482,25 +478,6 @@ interaction_plot_choice <- ggplot() +
   )
 
 interaction_plot_choice
-
-
-# ==============================================================================
-# For Reviews
-# ==============================================================================
-
-
-### Does instruction predict performance?
-
-model_inst_red <- glmer(
-  Peek ~ Condition * instruction + z.trial + (1 + z.trial * Condition.test | ID),
-  data = xdata,
-  control = contr,
-  family = binomial(link = "logit")
-)
-
-summary(model_inst_red)
-
-drop1(model_inst_red, test = "Chisq")
 
 
 # ==============================================================================

@@ -1,20 +1,18 @@
 # ==============================================================================
-# Sufficiency Evidence Analysis: 4-Year-Old Children Data
+# Sufficiency Evidence Analysis: 6-Year-Old Children Data
 # ==============================================================================
 # 
 # Description:
 #   This script analyzes peeking behavior in consistent and inconsistent reward-size conditions
-#   for 4-year-old children using mixed-effects logistic regression models
+#   for 6-year-old children using mixed-effects logistic regression models
 #   and creates visualizations.
 #
-# Author: Calder Hilde-Jones
-# Last Modified: Jan 15, 2025
 # 
 # Requirements:
-#   - R packages: tidyverse, lme4
-#   - Data file: sufev_4s.csv
+#   - R packages: tidyverse, lme4, PairedData
+#   - Data file: sufev_6_data.csv
 #   - Function file: boot_glmm.r
-#   - Workspace file (optional): model_plot_sufevkids_Nov25_2025.RData
+# 
 #
 # ==============================================================================
 
@@ -23,7 +21,7 @@ library(tidyverse)
 library(lme4)
 
 # Load Previous Workspace (Optional) -------------------------------------------
-load("images/sufev_4_Feb10.RData")
+load("images/sufev_6_image.RData")
 
 
 # ==============================================================================
@@ -31,16 +29,16 @@ load("images/sufev_4_Feb10.RData")
 # ==============================================================================
 
 # Load Raw Data ----------------------------------------------------------------
-data_suf_4 <- read.csv("data/sufev_4_data.csv")
+sufev6_data <- read.csv("data/sufev_6_data.csv")
 
 # Data Preprocessing -----------------------------------------------------------
-suf_4 <- data_suf_4 %>%
+suf_6 <- sufev6_data %>%
   mutate(
     # Convert Peek to binary (hp = 1, other = 0)
     Peek = if_else(Peek == "hp", 1, 0),
     
     # Convert Choice to binary (n = 0, other = 1)
-    Choice = if_else(Correct == "no", 0, 1),
+    #Choice = if_else(Correct == "no", 0, 1),
     
     # Convert Condition to binary factor (test = 1, control = 0)
     Condition.Binary = factor(
@@ -62,78 +60,103 @@ suf_4 <- data_suf_4 %>%
   )
 
 
-suf_4_trial_1 <- subset(suf_4, suf_4$Trial == 1)
+# Dataset with only test condition to test whether they were more likely to choose correctly when peeking
+suf_6_test <- suf_6 %>%
+  mutate(choice = if_else(Correct == "no", 0, 1)) %>%
+  filter(Condition.Binary == 1)
+
+# Dataset with only high-peeking in test condition to see whether they ever pick wrong
+
+suf_6_hp <- suf_6_test %>%
+  filter(Peek == 1)
+
 
 
 
 # ==============================================================================
-# PART 2: STATISTICAL MODELS - PEEKING BEHAVIOR
+# PART 2a: STATISTICAL MODELS - PEEKING BEHAVIOR
 # ==============================================================================
 
 # Set Optimizer Control Parameters ---------------------------------------------
 contr <- glmerControl(
   optimizer = "bobyqa",
-  optCtrl = list(maxfun = 100000000)
+  optCtrl = list(maxfun = 1000000000)
 )
 
 # Model 1: Full Model (Condition × Trial Interaction) -------------------------
-suf_4_full <- glmer(
-  Peek ~ Condition * z.trial + (1 + z.trial | ID),
-  data = suf_4,
+suf_6_full <- glmer(
+  Peek ~ Condition * z.trial + (1 + Condition.test * z.trial | ID),
+  data = suf_6,
   control = contr,
   family = binomial(link = "logit")
 )
 
-summary(suf_4_full)
+summary(suf_6_full)
 
-# Model 2: Trial 1 GLM ------------------------------
-
-suf_4_full_glm <- glm(
-  Peek ~ Condition,
-  data = suf_4_trial_1,
-  family = binomial(link = "logit")
-)
-
-drop1(suf_4_full_glm, test = "Chisq")
-
-# Model 3: Reduced Model (Additive Effects Only) ------------------------------
-suf_4_red <- glmer(
-  Peek ~ Condition + z.trial + (1 + z.trial | ID),
-  data = suf_4,
+# Model 2: Reduced Model (Additive Effects Only) ------------------------------
+suf_6_red <- glmer(
+  Peek ~ Condition + z.trial + (1 + Condition.test * z.trial | ID),
+  data = suf_6,
   control = contr,
   family = binomial(link = "logit")
 )
 
-summary(suf_4_red)
+summary(suf_6_red)
 
-# Model 4: Null Model (Random Effects Only) -----------------------------------
-suf_4_null <- glmer(
-  Peek ~ 1 + (1 + z.trial | ID),
-  data = suf_4,
+# Model 3: Null Model (Random Effects Only) -----------------------------------
+suf_6_null <- glmer(
+  Peek ~ 1 + (1 + z.trial * Condition.test | ID),
+  data = suf_6,
   control = contr,
   family = binomial(link = "logit")
 )
 
 
-# Extract Variance Components --------------------------------------------------
-VarCorr(suf_4_red)
+
+# ==============================================================================
+# PART 2b: STATISTICAL MODELS - CHOICE
+# ==============================================================================
+
+
+## Just test
+
+suf_choice_test <- glmer(
+  choice ~ Peek * z.trial + (1 + z.trial * Condition.test | ID),
+  data = suf_6_test,
+  control = contr,
+  family = binomial(link = "logit")
+)
+
+# Reduced Model
+
+suf_choice_test_red <- glmer(
+  choice ~ Peek + z.trial + (1 + z.trial * Condition.test | ID),
+  data = suf_6_test,
+  control = contr,
+  family = binomial(link = "logit"))
+
 
 
 # ==============================================================================
 # PART 3: MODEL SUMMARIES AND COMPARISONS
 # ==============================================================================
-cat("\n=== Model Summaries ===\n")
-summary(suf_4_full)
-summary(suf_4_red)
 
-cat("\n=== Term Significance (Full Model) ===\n")
-drop1(suf_4_full, test = "Chisq")
+#Model Summaries
+cat("\n=== Full and Reduced Model Summaries ===\n")
+summary(suf_6_full)
+summary(suf_6_red)
 
-cat("\n=== Term Significance (Reduced Model) ===\n")
-drop1(suf_4_red, test = "Chisq")
+# Test Term Significance -------------------------------------------------------
+cat("\n=== Drop1 Reduced Model ===\n")
+drop1(suf_6_red, test = 'Chisq')
+drop1(suf_6_full, test = 'Chisq')
+#Choice Model Summaries
+cat("\n=== Choice Test Only ===\n")
+summary(suf_choice_test)
 
-# Cross-Tabulation of Peek by Condition ----------------------------------------
-table(suf_4$Peek, suf_4$Condition)
+cat("\n=== Choice Test Only Red ===\n")
+summary(suf_choice_test_red)
+
 
 
 # ==============================================================================
@@ -143,19 +166,9 @@ table(suf_4$Peek, suf_4$Condition)
 # Source Bootstrap Function ----------------------------------------------------
 source("scripts/boot_glmm.r")
 
-# Generate Bootstrap Predictions (Condition × Trial) ---------------------------
-boot_full_suf_kids <- boot.glmm.pred(
-  model.res = suf_4_red,
-  excl.warnings = TRUE,
-  nboots = 1000,
-  para = FALSE,
-  level = 0.95,
-  use = c("Condition", "z.trial")
-)
-
 # Generate Bootstrap Predictions (Condition Only) ------------------------------
-boot_plot_suf_kids <- boot.glmm.pred(
-  model.res = suf_4_red,
+boot_plot_suf <- boot.glmm.pred(
+  model.res = suf_6_red,
   excl.warnings = TRUE,
   nboots = 1000,
   para = FALSE,
@@ -163,13 +176,24 @@ boot_plot_suf_kids <- boot.glmm.pred(
   use = c("Condition")
 )
 
+# Generate Bootstrap Predictions (Condition × Trial) ---------------------------
+boot_full_suf <- boot.glmm.pred(
+  model.res = suf_6_full,
+  excl.warnings = TRUE,
+  nboots = 1000,
+  para = FALSE,
+  level = 0.95,
+  use = c("Condition", "z.trial")
+)
+
+
 
 # ==============================================================================
 # PART 5: PREPARE DATA FOR VISUALIZATION
 # ==============================================================================
 
 # Bootstrap Prediction Summaries by Condition ----------------------------------
-ci_predicted_summary <- boot_plot_suf_kids$ci.predicted %>%
+ci_predicted_summary <- boot_plot_suf$ci.predicted %>%
   group_by(Condition) %>%
   summarize(
     fitted = mean(fitted),
@@ -179,7 +203,7 @@ ci_predicted_summary <- boot_plot_suf_kids$ci.predicted %>%
   )
 
 # Individual Participant Means by Condition ------------------------------------
-suf_individual_agg <- suf_4 %>%
+suf_individual_agg <- suf_6 %>%
   group_by(ID, Condition) %>%
   summarize(ind_mean = mean(Peek, na.rm = TRUE), .groups = "drop") %>%
   ungroup()
@@ -215,8 +239,8 @@ ci_predicted_summary_suf <- ci_predicted_summary %>%
   )
 
 # Create Violin Plot -----------------------------------------------------------
-violin_suf_kids <- ggplot(
-  suf_4,
+violin_suf <- ggplot(
+  suf_6,
   aes(x = Condition, y = Peek, fill = Condition)
 ) +
   # Violin plot showing distribution
@@ -242,23 +266,23 @@ violin_suf_kids <- ggplot(
     alpha = 0.45
   ) +
   
-  # Model predictions with confidence intervals (commented out)
+  # Model predictions with confidence intervals
   geom_errorbar(
-   data = ci_predicted_summary_suf,
-  aes(
-   x = x_num,
-  y = fitted,
-     ymin = lower.cl,
-     ymax = upper.cl,
-     color = Condition
-   ),
-   width = 0.1,
-   linewidth = 0.5
+    data = ci_predicted_summary_suf,
+    aes(
+      x = x_num,
+      y = fitted,
+      ymin = lower.cl,
+      ymax = upper.cl,
+      color = Condition
+    ),
+    width = 0.1,
+    linewidth = 0.5
   ) +
   geom_point(
-   data = ci_predicted_summary_suf,
-   aes(x = x_num, y = fitted),
-   size = 2
+    data = ci_predicted_summary_suf,
+    aes(x = x_num, y = fitted),
+    size = 2
   ) +
   
   # Styling
@@ -275,14 +299,14 @@ violin_suf_kids <- ggplot(
     axis.title = element_text(size = 15),
     axis.text = element_text(size = 13),
     strip.text.x = element_text(size = 13),
-    plot.margin = unit(c(.1, .05, .22, .30), "cm"),
+    plot.margin = unit(c(.2, 0, .2, .3), "cm"),
     axis.title.y.left = element_text(vjust = 3),
     plot.title = element_text(color = "black", size = 15, face = "bold"),
     axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)),
     legend.position = "none"
   )
 
-violin_suf_kids
+violin_suf
 
 
 # ==============================================================================
@@ -291,11 +315,11 @@ violin_suf_kids
 
 # Calculate Trial Break Points for X-Axis --------------------------------------
 trial_breaks <- sapply(1:12, function(x) {
-  (x - mean(suf_4$Trial)) / sd(suf_4$Trial)
+  (x - mean(suf_6$Trial)) / sd(suf_6$Trial)
 })
 
 # Create Interaction Plot ------------------------------------------------------
-interaction_plot_suf_4 <- ggplot() +
+interaction_plot_suf_6 <- ggplot() +
   # Raw data points (commented out)
   #geom_point(
   #  data = xdata,
@@ -309,7 +333,7 @@ interaction_plot_suf_4 <- ggplot() +
   
   # Confidence ribbons
   geom_ribbon(
-    data = boot_full_suf_kids$ci.predicted,
+    data = boot_full_suf$ci.predicted,
     aes(
       ymin = lower.cl,
       ymax = upper.cl,
@@ -322,7 +346,7 @@ interaction_plot_suf_4 <- ggplot() +
   
   # Fitted lines
   geom_line(
-    data = boot_full_suf_kids$ci.predicted,
+    data = boot_full_suf$ci.predicted,
     aes(x = z.trial, y = fitted, group = Condition, color = Condition),
     linewidth = 1.3
   ) +
@@ -345,20 +369,20 @@ interaction_plot_suf_4 <- ggplot() +
     axis.title = element_text(size = 15),
     axis.text = element_text(size = 13),
     strip.text.x = element_text(size = 13),
-    plot.margin = unit(c(-.1, .1, .22, .30), "cm"),
+    plot.margin = unit(c(.06, -.05, .1, .3), "cm"),
     axis.title.y.left = element_text(vjust = 3),
     axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)),
     legend.position = "right"
   )
 
-print(interaction_plot_suf_4)
+print(interaction_plot_suf_6)
 
 
 # ==============================================================================
 # SAVE WORKSPACE
 # ==============================================================================
 
-save.image("images/sufev_4_Feb10.RData")
+save.image("images/sufev_6_image.RData")
 
 # ==============================================================================
 # END OF SCRIPT

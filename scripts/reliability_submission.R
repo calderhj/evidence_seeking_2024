@@ -6,9 +6,6 @@
 #   This script calculates inter-rater reliability using Cohen's Kappa for
 #   peeking and choice coding across all studies (chimpanzees and children).
 #
-# Author: Calder Hilde-Jones
-# Last Modified: Jan15, 2025
-# 
 # Requirements:
 #   - R package: irr
 #   - Data files: Multiple CSV files for each study/age group

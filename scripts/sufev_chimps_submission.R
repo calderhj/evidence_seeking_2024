@@ -6,14 +6,12 @@
 #   This script analyzes peeking behavior in consistent and inconsistent reward-size conditions 
 #   using mixed-effects logistic regression models and creates visualizations.Chimpanzees.
 #
-# Author: Calder Hilde-Jones
-# Last Modified: Jan 15, 2025
 # 
 # Requirements:
 #   - R packages: tidyverse, lme4
 #   - Data file: sufev_data.csv
 #   - Function file: boot_glmm.r
-#   - Workspace file (optional): model_plot_sufev_Oct2_2025.RData
+#   
 #
 # ==============================================================================
 
@@ -22,7 +20,7 @@ library(tidyverse)
 library(lme4)
 
 # Load Previous Workspace (Optional) -------------------------------------------
-load("images/sufev_chimps_Jan15.RData")
+load("images/sufev_chimps_image.RData")
 
 
 # ==============================================================================
@@ -59,7 +57,6 @@ suf_data <- mydata_suf %>%
       levels = c("consistent", "inconsistent")
     )
   )
-
 
 
 # Dataset with only test condition to test whether they were more likely to choose correctly when peeking
@@ -142,9 +139,12 @@ suf_choice_test_red <- glmer(
   family = binomial(link = "logit")
 )
 
+
+
 # ==============================================================================
 # PART 3: MODEL SUMMARIES AND COMPARISONS
 # ==============================================================================
+summary(suf_model_peek_full)
 
 cat("\n=== Reduced Model Summary ===\n")
 summary(suf_model_peek_red)
@@ -164,24 +164,24 @@ summary(suf_choice_model_red)
 cat("\n=== Choice Test Only ===\n")
 summary(suf_choice_test)
 
+drop1(suf_choice_test, test = "Chisq")
+
 cat("\n=== Choice Test Only Red ===\n")
 summary(suf_choice_test_red)
 
+
 drop1(suf_choice_test_red, test = "Chisq")
-
-
-
 
 # ==============================================================================
 # PART 4: BOOTSTRAP CONFIDENCE INTERVALS
 # ==============================================================================
 
 # Source Bootstrap Function ----------------------------------------------------
-source("scripts/boot_glmm.r")
+source("scripts/boot_glmm_submission.r")
 
 # Generate Bootstrap Predictions (Condition × Trial) ---------------------------
 boot_full_suf <- boot.glmm.pred(
-  model.res = suf_model_peek_red,
+  model.res = suf_model_peek_full,
   excl.warnings = TRUE,
   nboots = 1000,
   para = FALSE,
@@ -197,6 +197,15 @@ boot_plot_suf <- boot.glmm.pred(
   para = FALSE,
   level = 0.95,
   use = c("Condition")
+)
+
+boot_choice_test <- boot.glmm.pred(
+  model.res = suf_choice_test,
+  excl.warnings = TRUE,
+  nboots = 1000,
+  para = FALSE,
+  level = 0.95,
+  use = c("Condition", "z.trial")
 )
 
 
@@ -389,65 +398,53 @@ interaction_plot_suf_chimps <- ggplot() +
 
 print(interaction_plot_suf_chimps)
 
+# ==============================================================================
+# For revisions - Familiarization length (in supplements) (new csv with familiarization lengths has been uploaded)
+# ==============================================================================
+
+# z transform fam length
+suf_data$fam_length <- as.numeric(scale(suf_data$fam_length))
+
+# full model summary and tests
+model_fam_full_full <- glmer(
+  Peek ~ Condition * fam_length * z.trial + (1 + z.trial * Condition.test | ID),
+  data = suf_data,
+  control = contr,
+  family = binomial(link = "logit")
+)
+
+summary(model_fam_full_full)
+
+drop1(model_fam_full_full, test = "Chisq")
+
+# two-way model summary and test
+model_fam_full_two_way <- glmer(
+  Peek ~ (Condition + fam_length + z.trial)^2 + (1 + z.trial * Condition.test | ID),
+  data = suf_data,
+  control = contr,
+  family = binomial(link = "logit")
+)
+
+summary(model_fam_full_two_way)
+
+drop1(model_fam_full_two_way, test = "Chisq")
+
+# Reduced model summary and test
+model_fam_full_red <- glmer(
+  Peek ~ (Condition * fam_length) + z.trial + (1 + z.trial * Condition.test | ID),
+  data = suf_data,
+  control = contr,
+  family = binomial(link = "logit")
+)
+
+summary(model_fam_full_red)
+
+drop1(model_fam_full_red, test = "Chisq")
 
 
 # ==============================================================================
-# For Revisions
+# For revisions - Repeated Subjects (in supplements) 
 # ==============================================================================
-
-### Do they pick above chance when high-peeking in the size-inconsistent condition
-
-suf_data_test_hp <- suf_data_test %>%
-  filter(Peek == 1)
-
-table(suf_data_test_hp$Choice)
-
-suf_choice_test2 <- glmer(
-  choice ~ Peek * z.trial + (1 + z.trial * Condition.test | ID),
-  data = suf_data_test,
-  control = contr,
-  family = binomial(link = "logit")
-)
-
-summary(suf_choice_test2)
-
-suf_choice_test2_red <- glmer(
-  choice ~ Peek + z.trial + (1 + z.trial | ID),
-  data = suf_data_test,
-  control = contr,
-  family = binomial(link = "logit")
-)
-
-summary(suf_choice_test2_red)
-
-
-suf_choice_test2_null <- glmer(
-  choice ~ 1 + (1 + z.trial | ID),
-  data = suf_data_test,
-  control = contr,
-  family = binomial(link = "logit")
-)
-
-summary(suf_choice_test2_null)
-
-anova(suf_choice_test2_red, suf_choice_test2_null)
-
-
-###only hp and test condition
-
-suf_hp_test <- suf_data_test %>%
-  filter(Peek == 1)
-
-suf_hp_test_choice <- glmer(
-  choice ~ 1 + (1 + z.trial | ID),
-  data = suf_hp_test,
-  control = contr,
-  family = binomial(link = "logit")
-)
-
-summary(suf_hp_test_choice)
-
-## Is there a difference in the main comparison if we account for repeated subjects across studies?
 
 suf_data$repeated <- ifelse(suf_data$ID %in% c(4, 5, 9, 12), 0, 1)
 
@@ -476,68 +473,11 @@ suf_model_repeat_red <- glmer(
 summary(suf_model_repeat_red)
 drop1(suf_model_repeat_red, test = "Chisq")
 
-## Full reduced
-suf_model_repeat_red2 <- glmer(
-  Peek ~ Condition * repeated + z.trial + (1 + z.trial * Condition.test | ID),
-  data = suf_data,
-  control = contr,
-  family = binomial(link = "logit")
-)
-
-summary(suf_model_repeat_red2)
-drop1(suf_model_repeat_red2, test = "Chisq")
-
-### The model from which we get the effects we report
-drop1(suf_model_peek_red, test = "Chisq")
-
-plot(Effect(c("repeated"), suf_model_repeat_red2))
-
-### ---- Effect of familiarization length
-
-suf_data$fam_length <- as.numeric(scale(suf_data$fam_length))
-
-model_fam_full_full <- glmer(
-  Peek ~ Condition * fam_length * z.trial + (1 + z.trial * Condition.test | ID),
-  data = suf_data,
-  control = contr,
-  family = binomial(link = "logit")
-)
-
-summary(model_fam_full_full)
-
-drop1(model_fam_full_full, test = "Chisq")
-
-
-model_fam_full_two_way <- glmer(
-  Peek ~ (Condition + fam_length + z.trial)^2 + (1 + z.trial * Condition.test | ID),
-  data = suf_data,
-  control = contr,
-  family = binomial(link = "logit")
-)
-
-summary(model_fam_full_two_way)
-
-drop1(model_fam_full_two_way, test = "Chisq")
-
-
-model_fam_full_red <- glmer(
-  Peek ~ (Condition * fam_length) + z.trial + (1 + z.trial * Condition.test | ID),
-  data = suf_data,
-  control = contr,
-  family = binomial(link = "logit")
-)
-
-summary(model_fam_full_red)
-
-drop1(model_fam_full_red, test = "Chisq")
-
-
-
 # ==============================================================================
 # SAVE WORKSPACE
 # ==============================================================================
 
-save.image("images/sufev_chimps_Jan15.RData")
+save.image("images/sufev_chimps_image.RData")
 
 cat("\n=== Analysis Complete ===\n")
 cat("Workspace saved to: model_plot_sufev_Oct2_2025.RData\n")
